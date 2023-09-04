@@ -722,8 +722,8 @@ static void nsvg__lineTo(NSVGparser* p, float x, float y)
 		py = p->pts[(p->npts-1)*2+1];
 		dx = x - px;
 		dy = y - py;
-		nsvg__addPoint(p, px + dx/3.0f, py + dy/3.0f);
-		nsvg__addPoint(p, x - dx/3.0f, y - dy/3.0f);
+		nsvg__addPoint(p, px, py);
+		nsvg__addPoint(p, x, y);
 		nsvg__addPoint(p, x, y);
 	}
 }
