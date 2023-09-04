@@ -875,6 +875,8 @@ static NSVGgradient* nsvg__createGradient(NSVGparser* p, const char* id, const f
 		grad->xform[0] = dy; grad->xform[1] = -dx;
 		grad->xform[2] = dx; grad->xform[3] = dy;
 		grad->xform[4] = x1; grad->xform[5] = y1;
+        nsvg__xformPoint(&grad->fx, &grad->fy, x1, y1, data->xform);
+        nsvg__xformPoint(&grad->fx, &grad->fy, grad->fx, grad->fy, attr->xform);
 	} else {
 		float cx, cy, fx, fy, r;
 		cx = nsvg__convertToPixels(p, data->radial.cx, ox, sw);
@@ -883,11 +885,12 @@ static NSVGgradient* nsvg__createGradient(NSVGparser* p, const char* id, const f
 		fy = nsvg__convertToPixels(p, data->radial.fy, oy, sh);
 		r = nsvg__convertToPixels(p, data->radial.r, 0, sl);
 		// Calculate transform aligned to the circle
-		grad->xform[0] = r; grad->xform[1] = 0;
-		grad->xform[2] = 0; grad->xform[3] = r;
+		grad->xform[0] = r*sw/sl; grad->xform[1] = 0;
+		grad->xform[2] = 0; grad->xform[3] = r*sh/sl;
 		grad->xform[4] = cx; grad->xform[5] = cy;
-		grad->fx = fx / r;
-		grad->fy = fy / r;
+        
+        nsvg__xformPoint(&grad->fx, &grad->fy, fx, fy, data->xform);
+        nsvg__xformPoint(&grad->fx, &grad->fy, grad->fx, grad->fy, attr->xform);
 	}
 
 	nsvg__xformMultiply(grad->xform, data->xform);
